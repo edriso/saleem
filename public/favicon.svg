@@ -1,0 +1,7 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Saleem">
+  <rect width="100" height="100" rx="24" fill="#0f1c17" />
+  <g fill="none" stroke="#3fb27f" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M29 73C29 41 50 27 74 27c0 32-21 46-45 46Z" />
+    <path d="M40 62c7-11 18-18 29-22" />
+  </g>
+</svg>
