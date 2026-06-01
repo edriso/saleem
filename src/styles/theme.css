@@ -1,0 +1,366 @@
+/* Saleem theme and layout.
+   Fresh, clean, calm, trustworthy — a health app, not a flashy tracker.
+   Dark fresh-green by default, with a light theme. Plus Jakarta Sans for
+   English, Cairo for Arabic, swapped via --font on language change.
+   RTL is first-class: layout uses CSS logical properties throughout, and
+   directional glyphs are mirrored with .s-flip. */
+@import 'tailwindcss';
+
+/* Expose core tokens to Tailwind utilities too (v4 @theme). */
+@theme {
+  --color-bg: #0f1c17;
+  --color-surface: #16261f;
+  --color-accent: #3fb27f;
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-arabic: 'Cairo', system-ui, sans-serif;
+}
+
+:root {
+  --radius: 18px;
+  /* Swapped to Cairo by useApplyDocument when lang=ar. */
+  --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --accent: #3fb27f;
+  --on-accent: #06140e;
+}
+
+/* Dark fresh-green (default): deep green-black surfaces. */
+[data-theme='dark'] {
+  --bg: #0f1c17;
+  --surface: #16261f;
+  --surface-2: #1e3128;
+  --line: rgba(180, 235, 210, 0.1);
+  --text: #e8f1ec;
+  --text-dim: #9bb3a8;
+  --text-faint: #6a8579;
+  --on-accent: #06140e;
+  --accent-soft: color-mix(in oklab, var(--accent) 16%, transparent);
+  --accent-line: color-mix(in oklab, var(--accent) 31%, var(--line));
+  --shadow: 0 16px 50px -12px rgba(0, 0, 0, 0.55);
+  color-scheme: dark;
+}
+
+/* Light. */
+[data-theme='light'] {
+  --bg: #f1f5f1;
+  --surface: #ffffff;
+  --surface-2: #e9f0ea;
+  --line: rgba(20, 50, 36, 0.11);
+  --text: #16261f;
+  --text-dim: #4f6a5e;
+  --text-faint: #8aa094;
+  --on-accent: #06140e;
+  --accent-soft: color-mix(in oklab, var(--accent) 14%, transparent);
+  --accent-line: color-mix(in oklab, var(--accent) 30%, var(--line));
+  --shadow: 0 16px 50px -12px rgba(20, 50, 36, 0.18);
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition:
+    background 0.4s ease,
+    color 0.4s ease;
+}
+
+/* Arabic reads better with a slightly taller line-height and no Latin tracking. */
+html[lang='ar'] body {
+  line-height: 1.65;
+  letter-spacing: 0;
+}
+
+::selection {
+  background: var(--accent-soft);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Mirror directional glyphs (chevrons/arrows) under RTL. */
+[dir='rtl'] .s-flip {
+  transform: scaleX(-1);
+}
+
+/* ---- Layout ------------------------------------------------------------- */
+.s-app {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+}
+.s-main {
+  flex: 1;
+  height: 100vh;
+  height: 100dvh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.s-col {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 22px 18px calc(116px + env(safe-area-inset-bottom));
+}
+.s-screen {
+  animation: sfade 0.4s ease both;
+}
+
+/* ---- Top bar (mobile): brand + language chip ---------------------------- */
+.s-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px 4px;
+}
+.s-brand-m {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+}
+.s-langchip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* ---- Mobile bottom nav -------------------------------------------------- */
+.s-bottom {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 40;
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
+  background: color-mix(in oklab, var(--bg) 84%, transparent);
+  backdrop-filter: blur(16px) saturate(1.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  border-top: 1px solid var(--line);
+}
+.s-tabbtn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 4px;
+  color: var(--text-faint);
+  font-family: inherit;
+  font-size: 10.5px;
+  font-weight: 700;
+  border-radius: 12px;
+  transition: color 0.2s;
+}
+.s-tabbtn.is-on {
+  color: var(--accent);
+}
+
+/* ---- Desktop side rail -------------------------------------------------- */
+.s-rail {
+  display: none;
+}
+@media (min-width: 760px) {
+  .s-rail {
+    display: flex;
+    flex-direction: column;
+    width: 232px;
+    flex-shrink: 0;
+    height: 100vh;
+    height: 100dvh;
+    position: sticky;
+    top: 0;
+    border-inline-end: 1px solid var(--line);
+    padding: 28px 18px;
+    background: color-mix(in oklab, var(--bg) 50%, var(--surface));
+  }
+  .s-bottom,
+  .s-topbar {
+    display: none;
+  }
+  .s-col {
+    padding: 48px 40px 64px;
+  }
+}
+.s-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 4px 8px 26px;
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+}
+.s-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  background: var(--accent);
+  color: var(--on-accent);
+  display: grid;
+  place-items: center;
+}
+.s-rail-items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+.s-navitem {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 11px 13px;
+  border-radius: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-dim);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-align: start;
+  transition:
+    background 0.18s,
+    color 0.18s;
+}
+.s-navitem:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+.s-navitem.is-on {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.s-langbtn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  padding: 11px 13px;
+  border-radius: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  cursor: pointer;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* ---- Primitives --------------------------------------------------------- */
+.s-card {
+  transition:
+    border-color 0.2s ease,
+    transform 0.12s ease;
+}
+.s-card.s-tap:hover {
+  border-color: var(--accent-line);
+}
+.s-iconbtn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--text);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.s-iconbtn:hover {
+  color: var(--accent);
+}
+.s-tap {
+  transition: transform 0.1s ease;
+}
+.s-tap:active {
+  transform: scale(0.96);
+}
+.s-btn {
+  transition:
+    filter 0.15s ease,
+    transform 0.1s ease;
+}
+.s-btn:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+.s-range {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.s-main::-webkit-scrollbar {
+  width: 10px;
+}
+.s-main::-webkit-scrollbar-thumb {
+  background: var(--surface-2);
+  border-radius: 99px;
+  border: 3px solid var(--bg);
+}
+
+/* ---- Motion ------------------------------------------------------------- */
+@keyframes sfade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.s-fade {
+  animation: sfade 0.35s ease both;
+}
+.s-veil {
+  animation: sveil 0.35s ease both;
+}
+@keyframes sveil {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
