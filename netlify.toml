@@ -1,0 +1,21 @@
+# Netlify configuration for Saleem.
+#
+# Netlify is the CI/CD: it installs, runs the quality gate, builds, and deploys
+# on every push. The build command fails the deploy if lint, type-check, or the
+# unit/component tests fail, so broken code never ships.
+
+[build]
+  command = "pnpm lint && pnpm test && pnpm build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Saleem is a React Router single-page app. Without this rule a hard refresh or
+# a shared deep link (e.g. /eat, /move) would 404, because the file does not
+# exist on disk — every path must fall through to index.html so the client
+# router can handle it.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
