@@ -9,7 +9,7 @@ import { HabitsScreen } from '@/features/habits/habits-screen';
 export function App() {
   return (
     <I18nProvider>
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '')}>
         <Routes>
           <Route element={<AppLayout />}>
             <Route index element={<TodayScreen />} />
