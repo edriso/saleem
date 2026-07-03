@@ -21,7 +21,8 @@ export default defineConfig({
         theme_color: '#0f1c17',
         background_color: '#0f1c17',
         display: 'standalone',
-        start_url: '/',
+        start_url: '/saleem/',
+        scope: '/saleem/',
         icons: [
           {
             src: 'icon.svg',
